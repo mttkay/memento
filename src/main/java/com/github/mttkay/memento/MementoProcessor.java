@@ -36,40 +36,46 @@ public class MementoProcessor extends AbstractProcessor {
         log("processing " + elements.size() + " fields");
 
         Element hostActivity = elements.iterator().next().getEnclosingElement();
-        PackageElement packageElement = processingEnv.getElementUtils().getPackageOf(hostActivity);
-
-        final String simpleClassName = hostActivity.getSimpleName() + "_Memento";
-        final String qualifiedClassName = packageElement.getQualifiedName() + "." + simpleClassName;
-
-        log("writing class " + qualifiedClassName);
 
         try {
-            JavaFileObject sourceFile = processingEnv.getFiler().createSourceFile(
-                    qualifiedClassName, elements.toArray(new Element[elements.size()]));
-
-            JavaWriter writer = new JavaWriter(sourceFile.openWriter());
-            writer.emitPackage(packageElement.getQualifiedName().toString())
-                    .emitImports("android.support.v4.app.Fragment")
-                    .emitImports("android.support.v4.app.FragmentActivity")
-                            //.emitImports(packageElement + ".*")
-                    .emitEmptyLine();
-
-            writer.beginType(qualifiedClassName, "class", EnumSet.of(Modifier.PUBLIC, Modifier.FINAL),
-                    "Fragment", LIB_PACKAGE + ".MementoMethods");
-
-            emitFields(elements, writer);
-            emitConstructor(simpleClassName, writer);
-            emitReaderMethod(elements, hostActivity, writer);
-            emitWriterMethod(elements, hostActivity, writer);
-
-            writer.endType();
-            writer.close();
-
+            generateMemento(elements, hostActivity);
         } catch (IOException e) {
             throw new RuntimeException("Failed writing class file", e);
         }
 
         return true;
+    }
+
+    private void generateMemento(Set<? extends Element> elements, Element hostActivity) throws IOException {
+        PackageElement packageElement = processingEnv.getElementUtils().getPackageOf(hostActivity);
+        final String simpleClassName = hostActivity.getSimpleName() + "_Memento";
+        final String qualifiedClassName = packageElement.getQualifiedName() + "." + simpleClassName;
+
+        log("writing class " + qualifiedClassName);
+        JavaFileObject sourceFile = processingEnv.getFiler().createSourceFile(
+                qualifiedClassName, elements.toArray(new Element[elements.size()]));
+
+        JavaWriter writer = new JavaWriter(sourceFile.openWriter());
+
+        emitClassHeader(packageElement, writer);
+
+        writer.beginType(qualifiedClassName, "class", EnumSet.of(Modifier.PUBLIC, Modifier.FINAL),
+                "Fragment", LIB_PACKAGE + ".MementoMethods");
+
+        emitFields(elements, writer);
+        emitConstructor(simpleClassName, writer);
+        emitReaderMethod(elements, hostActivity, writer);
+        emitWriterMethod(elements, hostActivity, writer);
+
+        writer.endType();
+        writer.close();
+    }
+
+    private void emitClassHeader(PackageElement packageElement, JavaWriter writer) throws IOException {
+        writer.emitPackage(packageElement.getQualifiedName().toString())
+                .emitImports("android.support.v4.app.Fragment")
+                .emitImports("android.support.v4.app.FragmentActivity")
+                .emitEmptyLine();
     }
 
     private void emitWriterMethod(Set<? extends Element> elements, Element hostActivity, JavaWriter writer) throws IOException {
