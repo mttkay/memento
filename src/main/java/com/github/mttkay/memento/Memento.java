@@ -18,11 +18,11 @@ public class Memento {
             log("No memento found; storing...");
             memento = createMemento(activity);
             ((MementoCallbacks) activity).onFirstCreate();
-            memento.from(activity);
+            memento.restore(activity);
             fragmentManager.beginTransaction().add((Fragment) memento, fragmentTag).commit();
         } else {
             log("Found memento; restoring...");
-            memento.to(activity);
+            memento.retain(activity);
         }
     }
 
