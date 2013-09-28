@@ -21,7 +21,7 @@ class RetainedActivity extends FragmentActivity implements MementoCallbacks {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Memento.bind(this);
+        Memento.retain(this);
     }
 
     @Override

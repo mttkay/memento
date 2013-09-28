@@ -7,7 +7,7 @@ import android.util.Log;
 
 public class Memento {
 
-    public static void bind(FragmentActivity activity) {
+    public static void retain(FragmentActivity activity) {
         FragmentManager fragmentManager = activity.getSupportFragmentManager();
 
         final String fragmentTag = activity.getClass().getCanonicalName() + "_state";
