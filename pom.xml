@@ -37,6 +37,13 @@
             <artifactId>javawriter</artifactId>
             <version>2.1.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.testing.compile</groupId>
+            <artifactId>compile-testing</artifactId>
+            <version>0.3</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
