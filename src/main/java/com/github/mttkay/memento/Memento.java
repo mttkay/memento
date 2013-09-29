@@ -17,7 +17,7 @@ public class Memento {
         if (memento == null) {
             log("No memento found; storing...");
             memento = createMemento(activity);
-            ((MementoCallbacks) activity).onFirstCreate();
+            ((MementoCallbacks) activity).onLaunch();
             memento.restore(activity);
             fragmentManager.beginTransaction().add((Fragment) memento, fragmentTag).commit();
         } else {

@@ -25,7 +25,7 @@ class RetainedActivity extends FragmentActivity implements MementoCallbacks {
     }
 
     @Override
-    public void onFirstCreate() {
+    public void onLaunch() {
         retainedString = "set";
     }
 }

@@ -21,6 +21,6 @@ class RetainedActivityWithPrivateFields extends FragmentActivity implements Meme
     }
 
     @Override
-    public void onFirstCreate() {
+    public void onLaunch() {
     }
 }
