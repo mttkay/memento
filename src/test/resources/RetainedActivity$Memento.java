@@ -3,13 +3,13 @@ package com.test;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 
-public final class RetainedActivity_Memento extends Fragment
+public final class RetainedActivity$Memento extends Fragment
         implements com.github.mttkay.memento.MementoMethods {
 
     String retainedString;
     android.os.AsyncTask asyncTask;
 
-    public RetainedActivity_Memento() {
+    public RetainedActivity$Memento() {
         setRetainInstance(true);
     }
 

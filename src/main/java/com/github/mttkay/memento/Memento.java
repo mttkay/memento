@@ -27,7 +27,7 @@ public class Memento {
     }
 
     private static MementoMethods createMemento(FragmentActivity activity) {
-        final String fragmentClassName = activity.getComponentName().getClassName() + "_Memento";
+        final String fragmentClassName = activity.getComponentName().getClassName() + "$Memento";
         try {
             final Class<?> fragmentClass = activity.getClassLoader().loadClass(fragmentClassName);
             return (MementoMethods) fragmentClass.newInstance();

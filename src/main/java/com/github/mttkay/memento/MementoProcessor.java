@@ -48,7 +48,7 @@ public class MementoProcessor extends AbstractProcessor {
 
     private void generateMemento(Set<? extends Element> elements, Element hostActivity) throws IOException {
         PackageElement packageElement = processingEnv.getElementUtils().getPackageOf(hostActivity);
-        final String simpleClassName = hostActivity.getSimpleName() + "_Memento";
+        final String simpleClassName = hostActivity.getSimpleName() + "$Memento";
         final String qualifiedClassName = packageElement.getQualifiedName() + "." + simpleClassName;
 
         log("writing class " + qualifiedClassName);

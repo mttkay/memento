@@ -18,7 +18,7 @@ public class MementoProcessorTest {
                 .that(JavaFileObjects.forResource("RetainedActivity.java"))
                 .processedWith(new MementoProcessor())
                 .compilesWithoutError()
-                .and().generatesSources(JavaFileObjects.forResource("RetainedActivity_Memento.java"));
+                .and().generatesSources(JavaFileObjects.forResource("RetainedActivity$Memento.java"));
     }
 
     @Test(expected = CompilationFailureException.class)
