@@ -5,7 +5,7 @@ of an activity across configuration changes in a simple and type-safe manner.
 
 ![Memento](https://raw.github.com/mttkay/memento/master/project/logo_400w.png)
 
-## Rationale
+# Overview
 On Android, `Activity` instances will get destroyed by the runtime whenever configuration changes occur such as
 a change in screen orientation. Since this will cause the activity to go through an `onDestroy`/`onCreate` cycle,
 all instance state is lost.
@@ -26,7 +26,7 @@ constructs (i.e. not using any loop holes.)
 # Usage
 Using the library requires three steps:
 
-## 1 - Annotate fields to be retained
+### 1. Annotate fields
 In your activity, use the `@Retain` annotation to annotate fields that are to survive configuration
 changes. **Annotated fields cannot be private.**
 
@@ -34,7 +34,7 @@ changes. **Annotated fields cannot be private.**
     @Retain AsyncTask mTask;
     ...
     
-## 2 - Implement Memento callbacks
+### 2. Implement launch hook
 Memento adds a new life-cycle hook to your activies: `onLaunch`. This event signals that your activity
 was created for the first time, contrary to e.g. being recreated due to a configuration change.
 In `onLaunch`, initialize any member fields that are supposed to be created just once, when the activity
@@ -49,7 +49,7 @@ with built in fragment support will be added shortly.**
         }
     }
     
-## 3 - Bind Activity
+### 3. Bind Activity
 Execute Memento to either initialize or restore annotated fields in `onCreate`:
 
     @Override
