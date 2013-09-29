@@ -3,6 +3,8 @@ Memento is an annotation processor for Android that gives your activities a memo
 It introduces the `@Retain` annotation, which allows you to retain arbitrary fields
 of an activity across configuration changes in a simple and type-safe manner.
 
+![Memento](https://raw.github.com/mttkay/memento/master/project/logo_400w.png)
+
 ## Rationale
 On Android, `Activity` instances will get destroyed by the runtime whenever configuration changes occur such as
 a change in screen orientation. Since this will cause the activity to go through an `onDestroy`/`onCreate` cycle,
