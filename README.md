@@ -6,25 +6,17 @@ of an activity across configuration changes in a simple and type-safe manner.
 ![Memento](https://raw.github.com/mttkay/memento/master/project/logo_400w.png)
 
 # Overview
-On Android, `Activity` instances will get destroyed by the runtime whenever configuration changes occur such as
-a change in screen orientation. Since this will cause the activity to go through an `onDestroy`/`onCreate` cycle,
-all instance state is lost.
+On Android, `Activity` instances will get destroyed by the runtime whenever configuration changes occur such as a change in screen orientation. Since this will cause the activity to go through an `onDestroy`/`onCreate` cycle, all instance state is lost.
 
-This is especially troublesome when one needs to retain state about concurrency, such as an ongoing
-`AsyncTask`. Without retaining that state when the activity gets destroyed, all results would be lost.
-In earlier days, one was to use the `onRetainNonConfigurationInstance` callback, which is not type-safe,
-is cumbersome to use, and is today deprecated in favor of using fragments that `setRetainInstance(true)`.
+This is especially troublesome when one needs to retain concurrent objects, such as running `AsyncTasks`. Without retaining their state when the activity gets destroyed, results will be lost unless cached and redelivered to the activity.
+In earlier days, one was to use the `onRetainNonConfigurationInstance` callback, which is not type-safe, is cumbersome to use, and is today deprecated in favour of using fragments that `setRetainInstance(true)`.
 
-While introducing fragments helps tremendously with this issue, it is often required to keep shared state
-in the host activity when multiple fragments are embedded that share the same state or data. If, for instance,
-you fetch data from an API that is supposed to backfill 3 fragments in a host activity, that state would have
-to be duplicated in or brodcasted to these fragments.
+While introducing fragments helps retaining state on a per-fragment basis, shared data that is to be delivered to any number of embedded fragments must be duplicated in each of them, or manually shifted to a shared background fragment.
 
-Memento solves all these issues in a simple and type-safe way while adhering to platform guidelines and
-constructs (i.e. not using any loop holes.)
+Memento solves all these issues in an elegant, simple, and type-safe way by generating companion fragments for your activities that retain shared state.
 
 # Usage
-Using the library requires three steps:
+Using the library involves just three steps:
 
 ### 1. Annotate fields
 In your activity, use the `@Retain` annotation to annotate fields that are to survive configuration
