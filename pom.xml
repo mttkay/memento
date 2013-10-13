@@ -50,9 +50,6 @@
 
         <!-- Compilation -->
         <java.version>1.6</java.version>
-
-        <!-- Test Dependencies -->
-        <junit.version>4.10</junit.version>
     </properties>
 
     <dependencyManagement>
@@ -68,6 +65,13 @@
                 <artifactId>support-v4</artifactId>
                 <version>r13</version>
                 <scope>provided</scope>
+            </dependency>
+            <!-- TESTING -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.11</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
