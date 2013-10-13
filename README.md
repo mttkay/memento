@@ -15,6 +15,31 @@ While introducing fragments helps retaining state on a per-fragment basis, share
 
 Memento solves all these issues in an elegant, simple, and type-safe way by generating companion fragments for your activities that retain shared state.
 
+# Setup
+Memento is published as a Maven artifact. If you're using Android Studio, add the following config to your `build.gradle`:
+
+    configurations {
+      apt // create a new classpath for Java APT processors
+    }
+    
+    dependencies {
+      // pulls in dependency for the client library
+      compile 'com.github.mttkay.memento:memento:0.1'
+      
+      // pulls in dependency for APT
+      apt 'com.github.mttkay.memento:memento-processor:0.1'
+    }
+    
+    afterEvaluate { project ->
+        android.applicationVariants.each { variant ->
+            variant.javaCompile.options.compilerArgs += [
+                    '-classpath', configurations.compile.asPath,
+                    '-processorpath', configurations.apt.asPath,
+                    '-processor', 'com.github.mttkay.memento.MementoProcessor'
+            ]
+        }
+    }
+
 # Usage
 Using the library involves just three steps:
 
@@ -54,8 +79,11 @@ Execute Memento to either initialize or restore annotated fields in `onCreate`:
 On the first call to `onCreate`, this will invoke the `onLaunch` hook. Otherwise, it will restore
 any fields previously initialized in that hook.
 
-# Installation
-TODO
-
 # License
-TODO
+Copyright 2013 Matthias Käppler
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
