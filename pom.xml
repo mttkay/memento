@@ -93,9 +93,9 @@
                 <extensions>true</extensions>
                 <inherited>false</inherited>
                 <configuration>
-                    <serverId>ossrh-releases</serverId>
+                    <serverId>sonatype-nexus-staging</serverId>
                     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <stagingProfileId>TODO</stagingProfileId>
+                    <stagingProfileId>f6ddc5bd1e3c9</stagingProfileId>
                 </configuration>
             </plugin>
         </plugins>
@@ -177,7 +177,7 @@
 
     <distributionManagement>
         <snapshotRepository>
-            <id>ossrh-snapshots</id>
+            <id>sonatype-nexus-snapshots</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
