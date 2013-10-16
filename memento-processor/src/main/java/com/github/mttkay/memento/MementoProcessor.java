@@ -81,7 +81,7 @@ public class MementoProcessor extends AbstractProcessor {
     private void emitWriterMethod(Set<? extends Element> elements, Element hostActivity, JavaWriter writer) throws IOException {
         writer.emitEmptyLine();
         writer.emitAnnotation(Override.class);
-        writer.beginMethod("void", "retain", EnumSet.of(Modifier.PUBLIC), "FragmentActivity", "target");
+        writer.beginMethod("void", "restore", EnumSet.of(Modifier.PUBLIC), "FragmentActivity", "target");
         final String activityClass = hostActivity.getSimpleName().toString();
         writer.emitStatement(activityClass + " activity = (" + activityClass + ") target");
         for (Element element : elements) {
@@ -93,7 +93,7 @@ public class MementoProcessor extends AbstractProcessor {
     private void emitReaderMethod(Set<? extends Element> elements, Element hostActivity, JavaWriter writer) throws IOException {
         writer.emitEmptyLine();
         writer.emitAnnotation(Override.class);
-        writer.beginMethod("void", "restore", EnumSet.of(Modifier.PUBLIC), "FragmentActivity", "source");
+        writer.beginMethod("void", "retain", EnumSet.of(Modifier.PUBLIC), "FragmentActivity", "source");
         final String activityClass = hostActivity.getSimpleName().toString();
         writer.emitStatement(activityClass + " activity = (" + activityClass + ") source");
         for (Element element : elements) {
