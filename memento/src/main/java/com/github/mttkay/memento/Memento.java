@@ -9,6 +9,8 @@ import android.util.Log;
 
 public class Memento {
 
+    private static final String LOG_TAG = Memento.class.getSimpleName();
+
     public static void retain(Activity activity) {
         final String fragmentTag = getMementoFragmentTag(activity);
         log("Obtaining " + fragmentTag);
@@ -83,6 +85,8 @@ public class Memento {
     }
 
     private static void log(String message) {
-        Log.i(Memento.class.getSimpleName(), message);
+        if (Log.isLoggable(LOG_TAG, Log.DEBUG)) {
+            Log.d(LOG_TAG, message);
+        }
     }
 }
