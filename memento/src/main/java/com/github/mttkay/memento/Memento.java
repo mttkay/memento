@@ -1,5 +1,6 @@
 package com.github.mttkay.memento;
 
+import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -10,7 +11,7 @@ public class Memento {
     public static void retain(FragmentActivity activity) {
         FragmentManager fragmentManager = activity.getSupportFragmentManager();
 
-        final String fragmentTag = activity.getClass().getCanonicalName() + "_state";
+        final String fragmentTag = getMementoFragmentTag(activity);
         log("Obtaining " + fragmentTag);
         MementoMethods memento = (MementoMethods) fragmentManager.findFragmentByTag(fragmentTag);
 
@@ -27,7 +28,7 @@ public class Memento {
     }
 
     private static MementoMethods createMemento(FragmentActivity activity) {
-        final String fragmentClassName = activity.getComponentName().getClassName() + "$Memento";
+        final String fragmentClassName = getMementoClassName(activity);
         try {
             final Class<?> fragmentClass = activity.getClassLoader().loadClass(fragmentClassName);
             return (MementoMethods) fragmentClass.newInstance();
@@ -38,6 +39,15 @@ public class Memento {
         } catch (IllegalAccessException e) {
             throw new IllegalStateException("Could not access memento: " + fragmentClassName, e);
         }
+    }
+
+    private static String getMementoClassName(Activity hostActivity) {
+        return hostActivity.getComponentName().getClassName() + "$Memento";
+    }
+
+    private static String getMementoFragmentTag(Activity hostActivity) {
+        // for simplicity, just use the Memento fragment's class name
+        return getMementoClassName(hostActivity);
     }
 
     private static void log(String message) {
