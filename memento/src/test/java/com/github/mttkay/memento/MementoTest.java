@@ -20,6 +20,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -108,12 +109,12 @@ public class MementoTest {
         boolean restoreWasCalled;
 
         @Override
-        public void retain(FragmentActivity target) {
+        public void retain(Activity target) {
             retainWasCalled = true;
         }
 
         @Override
-        public void restore(FragmentActivity source) {
+        public void restore(Activity source) {
             restoreWasCalled = true;
         }
     }

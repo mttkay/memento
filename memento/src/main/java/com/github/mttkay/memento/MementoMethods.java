@@ -1,10 +1,10 @@
 package com.github.mttkay.memento;
 
-import android.support.v4.app.FragmentActivity;
+import android.app.Activity;
 
 public interface MementoMethods {
 
-    void retain(FragmentActivity source);
-    void restore(FragmentActivity target);
+    void retain(Activity source);
+    void restore(Activity target);
 
 }

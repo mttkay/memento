@@ -1,5 +1,6 @@
 package com.github.mttkay.memento;
 
+import static com.google.testing.compile.JavaFileObjects.forSourceString;
 import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
 
 import com.google.common.base.Joiner;
@@ -18,12 +19,11 @@ import java.io.PrintStream;
 @RunWith(JUnit4.class)
 public class MementoProcessorTest {
 
-    private static final JavaFileObject EXPECTED_MEMENTO =
-            JavaFileObjects.forSourceString("RetainedActivity$Memento", Joiner.on("").join(
+    private static final String SUPPORTV4_MEMENTO = Joiner.on("\n").join(
             "package com.test;",
             "",
             "import android.support.v4.app.Fragment;",
-            "import android.support.v4.app.FragmentActivity;",
+            "import android.app.Activity;",
             "",
             "public final class RetainedActivity$Memento extends Fragment",
             "        implements com.github.mttkay.memento.MementoMethods {",
@@ -36,19 +36,19 @@ public class MementoProcessorTest {
             "    }",
             "",
             "    @Override",
-            "    public void retain(FragmentActivity source) {",
+            "    public void retain(Activity source) {",
             "        RetainedActivity activity = (RetainedActivity) source;",
             "        this.retainedString = activity.retainedString;",
             "        this.asyncTask = activity.asyncTask;",
             "    }",
             "",
             "    @Override",
-            "    public void restore(FragmentActivity target) {",
+            "    public void restore(Activity target) {",
             "        RetainedActivity activity = (RetainedActivity) target;",
             "        activity.retainedString = this.retainedString;",
             "        activity.asyncTask = this.asyncTask;",
             "    }",
-            "}"));
+            "}");
 
     @Before
     public void dontPrintExceptions() {
@@ -58,11 +58,12 @@ public class MementoProcessorTest {
 
     @Test
     public void itGeneratesMementoFragmentClass() {
+        JavaFileObject expectedSource = forSourceString("RetainedActivity$Memento", SUPPORTV4_MEMENTO);
         Truth.ASSERT.about(javaSource())
                 .that(JavaFileObjects.forResource("com/test/RetainedActivity.java"))
                 .processedWith(new MementoProcessor())
                 .compilesWithoutError()
-                .and().generatesSources(EXPECTED_MEMENTO);
+                .and().generatesSources(expectedSource);
     }
 
     @Test(expected = CompilationFailureException.class)
