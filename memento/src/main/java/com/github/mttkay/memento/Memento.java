@@ -1,6 +1,7 @@
 package com.github.mttkay.memento;
 
 import android.app.Activity;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -8,26 +9,57 @@ import android.util.Log;
 
 public class Memento {
 
-    public static void retain(FragmentActivity activity) {
-        FragmentManager fragmentManager = activity.getSupportFragmentManager();
-
+    public static void retain(Activity activity) {
         final String fragmentTag = getMementoFragmentTag(activity);
         log("Obtaining " + fragmentTag);
-        MementoMethods memento = (MementoMethods) fragmentManager.findFragmentByTag(fragmentTag);
 
-        if (memento == null) {
-            log("No memento found; storing...");
-            memento = createMemento(activity);
-            ((MementoCallbacks) activity).onLaunch();
-            memento.retain(activity);
-            fragmentManager.beginTransaction().add((Fragment) memento, fragmentTag).commit();
+        if (activity instanceof FragmentActivity) {
+            retainSupportV4((FragmentActivity) activity, fragmentTag);
+        } else if (Build.VERSION.SDK_INT >= 10) {
+            retainNative(activity, fragmentTag);
         } else {
-            log("Found memento; restoring...");
-            memento.restore(activity);
+            throw new RuntimeException("For API levels < 10, Memento requires the support-v4 package");
         }
     }
 
-    private static MementoMethods createMemento(FragmentActivity activity) {
+    private static void retainNative(Activity activity, String fragmentTag) {
+        android.app.FragmentManager fragmentManager = activity.getFragmentManager();
+        MementoMethods memento = (MementoMethods) fragmentManager.findFragmentByTag(fragmentTag);
+
+        if (memento == null) {
+            memento = buildMemento(activity);
+            fragmentManager.beginTransaction().add((android.app.Fragment) memento, fragmentTag).commit();
+        } else {
+            restoreMemento(activity, memento);
+        }
+    }
+
+    private static void retainSupportV4(FragmentActivity activity, String fragmentTag) {
+        FragmentManager fragmentManager = activity.getSupportFragmentManager();
+        MementoMethods memento = (MementoMethods) fragmentManager.findFragmentByTag(fragmentTag);
+
+        if (memento == null) {
+            memento = buildMemento(activity);
+            fragmentManager.beginTransaction().add((Fragment) memento, fragmentTag).commit();
+        } else {
+            restoreMemento(activity, memento);
+        }
+    }
+
+    private static MementoMethods buildMemento(Activity activity) {
+        log("No memento found; storing...");
+        MementoMethods memento = instantiateMementoFragment(activity);
+        ((MementoCallbacks) activity).onLaunch();
+        memento.retain(activity);
+        return memento;
+    }
+
+    private static void restoreMemento(Activity activity, MementoMethods memento) {
+        log("Found memento; restoring...");
+        memento.restore(activity);
+    }
+
+    private static MementoMethods instantiateMementoFragment(Activity activity) {
         final String fragmentClassName = getMementoClassName(activity);
         try {
             final Class<?> fragmentClass = activity.getClassLoader().loadClass(fragmentClassName);

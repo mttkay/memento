@@ -29,10 +29,10 @@ import android.support.v4.app.FragmentTransaction;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
-public class MementoTest {
+public class MementoSupportV4Test {
 
     private static final String TEST_ACTIVITY_CLASS =
-            "com.github.mttkay.memento.MementoTest$RetainedActivity";
+            "com.github.mttkay.memento.MementoSupportV4Test$RetainedActivity";
     private static final String EXPECTED_FRAGMENT_TAG = TEST_ACTIVITY_CLASS + "$Memento";
 
     @Mock

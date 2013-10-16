@@ -19,10 +19,10 @@ import java.io.PrintStream;
 @RunWith(JUnit4.class)
 public class MementoProcessorTest {
 
-    private static final String SUPPORTV4_MEMENTO = Joiner.on("\n").join(
+    private static final String NATIVE_MEMENTO = Joiner.on("\n").join(
             "package com.test;",
             "",
-            "import android.support.v4.app.Fragment;",
+            "import android.app.Fragment;",
             "import android.app.Activity;",
             "",
             "public final class RetainedActivity$Memento extends Fragment",
@@ -50,6 +50,13 @@ public class MementoProcessorTest {
             "    }",
             "}");
 
+    private static final String SUPPORTV4_MEMENTO = NATIVE_MEMENTO
+            .replaceAll("android.app.Fragment", "android.support.v4.app.Fragment")
+            .replaceAll("RetainedActivity", "RetainedFragmentActivity");
+
+    private static final String CUSTOM_BASE_MEMENTO = NATIVE_MEMENTO
+            .replaceAll("RetainedActivity", "RetainedActivityWithCustomBase");
+
     @Before
     public void dontPrintExceptions() {
         // get rid of the stack trace prints for expected exceptions
@@ -57,10 +64,30 @@ public class MementoProcessorTest {
     }
 
     @Test
-    public void itGeneratesMementoFragmentClass() {
-        JavaFileObject expectedSource = forSourceString("RetainedActivity$Memento", SUPPORTV4_MEMENTO);
+    public void itGeneratesMementoForNativeFragmentActivities() {
+        JavaFileObject expectedSource = forSourceString("RetainedActivity$Memento", NATIVE_MEMENTO);
         Truth.ASSERT.about(javaSource())
                 .that(JavaFileObjects.forResource("com/test/RetainedActivity.java"))
+                .processedWith(new MementoProcessor())
+                .compilesWithoutError()
+                .and().generatesSources(expectedSource);
+    }
+
+    @Test
+    public void itGeneratesMementoForSupportPackageFragmentActivities() {
+        JavaFileObject expectedSource = forSourceString("RetainedFragmentActivity$Memento", SUPPORTV4_MEMENTO);
+        Truth.ASSERT.about(javaSource())
+                .that(JavaFileObjects.forResource("com/test/RetainedFragmentActivity.java"))
+                .processedWith(new MementoProcessor())
+                .compilesWithoutError()
+                .and().generatesSources(expectedSource);
+    }
+
+    @Test
+    public void itGeneratesMementoForActivitiesWithCustomBaseTypes() {
+        JavaFileObject expectedSource = forSourceString("RetainedActivityWithCustomBase$Memento", CUSTOM_BASE_MEMENTO);
+        Truth.ASSERT.about(javaSource())
+                .that(JavaFileObjects.forResource("com/test/RetainedActivityWithCustomBase.java"))
                 .processedWith(new MementoProcessor())
                 .compilesWithoutError()
                 .and().generatesSources(expectedSource);
@@ -70,6 +97,14 @@ public class MementoProcessorTest {
     public void itThrowsExceptionWhenRetainedFieldIsPrivate() {
         Truth.ASSERT.about(javaSource())
                 .that(JavaFileObjects.forResource("com/test/RetainedActivityWithPrivateFields.java"))
+                .processedWith(new MementoProcessor())
+                .failsToCompile();
+    }
+
+    @Test(expected = CompilationFailureException.class)
+    public void itThrowsExceptionWhenEnclosingTypeIsNotAnActivity() {
+        Truth.ASSERT.about(javaSource())
+                .that(JavaFileObjects.forResource("com/test/NotAnActivity.java"))
                 .processedWith(new MementoProcessor())
                 .failsToCompile();
     }

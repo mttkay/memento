@@ -36,9 +36,13 @@ public class MementoProcessor extends AbstractProcessor {
         log("processing " + elements.size() + " fields");
 
         Element hostActivity = elements.iterator().next().getEnclosingElement();
+        TypeElement activityType = findAndroidActivitySuperType((TypeElement) hostActivity);
+        if (activityType == null) {
+            throw new IllegalStateException("Annotated type does not seem to be an Activity");
+        }
 
         try {
-            generateMemento(elements, hostActivity);
+            generateMemento(elements, hostActivity, activityType);
         } catch (IOException e) {
             throw new RuntimeException("Failed writing class file", e);
         }
@@ -46,7 +50,8 @@ public class MementoProcessor extends AbstractProcessor {
         return true;
     }
 
-    private void generateMemento(Set<? extends Element> elements, Element hostActivity) throws IOException {
+    private void generateMemento(Set<? extends Element> elements, Element hostActivity, TypeElement activityType)
+            throws IOException {
         PackageElement packageElement = processingEnv.getElementUtils().getPackageOf(hostActivity);
         final String simpleClassName = hostActivity.getSimpleName() + "$Memento";
         final String qualifiedClassName = packageElement.getQualifiedName() + "." + simpleClassName;
@@ -57,7 +62,7 @@ public class MementoProcessor extends AbstractProcessor {
 
         JavaWriter writer = new JavaWriter(sourceFile.openWriter());
 
-        emitClassHeader(packageElement, writer);
+        emitClassHeader(packageElement, activityType, writer);
 
         writer.beginType(qualifiedClassName, "class", EnumSet.of(Modifier.PUBLIC, Modifier.FINAL),
                 "Fragment", LIB_PACKAGE + ".MementoMethods");
@@ -71,11 +76,39 @@ public class MementoProcessor extends AbstractProcessor {
         writer.close();
     }
 
-    private void emitClassHeader(PackageElement packageElement, JavaWriter writer) throws IOException {
-        writer.emitPackage(packageElement.getQualifiedName().toString())
-                .emitImports("android.support.v4.app.Fragment")
-                .emitImports("android.app.Activity")
-                .emitEmptyLine();
+    private void emitClassHeader(PackageElement packageElement, TypeElement activityType, JavaWriter writer) throws IOException {
+        writer.emitPackage(packageElement.getQualifiedName().toString());
+
+        if (isFragmentActivity(activityType)) {
+            writer.emitImports("android.support.v4.app.Fragment");
+        } else {
+            writer.emitImports("android.app.Fragment");
+        }
+        writer.emitImports("android.app.Activity");
+        writer.emitEmptyLine();
+    }
+
+    private TypeElement findAndroidActivitySuperType(TypeElement activityType) {
+        final String typeName = activityType.getQualifiedName().toString();
+        if (typeName.equals("java.lang.Object")) {
+            return null;
+        } else if (isNativeActivity(activityType) || isFragmentActivity(activityType)) {
+            return activityType;
+        } else {
+            final Element superType = processingEnv.getTypeUtils().asElement(
+                    activityType.getSuperclass());
+            return findAndroidActivitySuperType((TypeElement) superType);
+        }
+    }
+
+    private boolean isNativeActivity(TypeElement type) {
+        final String typeName = type.getQualifiedName().toString();
+        return typeName.equals("android.app.Activity");
+    }
+
+    private boolean isFragmentActivity(TypeElement type) {
+        final String typeName = type.getQualifiedName().toString();
+        return typeName.equals("android.support.v4.app.FragmentActivity");
     }
 
     private void emitWriterMethod(Set<? extends Element> elements, Element hostActivity, JavaWriter writer) throws IOException {

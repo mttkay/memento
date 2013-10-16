@@ -4,13 +4,11 @@ import com.github.mttkay.memento.Memento;
 import com.github.mttkay.memento.MementoCallbacks;
 import com.github.mttkay.memento.Retain;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 
-import java.lang.Override;
-
-class RetainedActivity extends FragmentActivity implements MementoCallbacks {
+class RetainedActivity extends Activity implements MementoCallbacks {
 
     @Retain
     String retainedString;

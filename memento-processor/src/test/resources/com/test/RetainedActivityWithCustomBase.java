@@ -4,13 +4,17 @@ import com.github.mttkay.memento.Memento;
 import com.github.mttkay.memento.MementoCallbacks;
 import com.github.mttkay.memento.Retain;
 
+import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 
-class RetainedActivityWithPrivateFields extends FragmentActivity implements MementoCallbacks {
+class RetainedActivityWithCustomBase extends Base implements MementoCallbacks {
 
     @Retain
-    private String retainedString;
+    String retainedString;
+
+    @Retain
+    AsyncTask asyncTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,4 +25,9 @@ class RetainedActivityWithPrivateFields extends FragmentActivity implements Meme
     @Override
     public void onLaunch() {
     }
+}
+
+
+class Base extends Activity {
+    // processor should figure out that subclass is an Activity
 }
