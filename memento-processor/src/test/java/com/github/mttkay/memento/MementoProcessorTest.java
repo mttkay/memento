@@ -23,7 +23,7 @@ public class MementoProcessorTest {
     }
 
     @Test
-    public void generateMementoClass() {
+    public void itGeneratesMementoFragmentClass() {
         Truth.ASSERT.about(javaSource())
                 .that(JavaFileObjects.forResource("RetainedActivity.java"))
                 .processedWith(new MementoProcessor())
@@ -32,7 +32,7 @@ public class MementoProcessorTest {
     }
 
     @Test(expected = CompilationFailureException.class)
-    public void throwsIllegalStateIfRetainedFieldIsPrivate() {
+    public void itThrowsExceptionWhenRetainedFieldIsPrivate() {
         Truth.ASSERT.about(javaSource())
                 .that(JavaFileObjects.forResource("RetainedActivityWithPrivateFields.java"))
                 .processedWith(new MementoProcessor())
