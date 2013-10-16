@@ -4,7 +4,7 @@
 
     <groupId>com.github.mttkay.memento</groupId>
     <artifactId>memento-project</artifactId>
-    <version>0.1</version>
+    <version>0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Memento</name>
@@ -36,7 +36,7 @@
         <url>https://github.com/mttkay/memento</url>
         <connection>scm:git:git://github.com/mttkay/memento.git</connection>
         <developerConnection>scm:git:git@github.com:mttkay/memento.git</developerConnection>
-      <tag>0.1</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <modules>
