@@ -99,7 +99,7 @@ public class MementoNativeTest {
 
     @Test(expected = RuntimeException.class)
     public void itThrowsExceptionIfApiLevelTooLow() {
-        Robolectric.Reflection.setFinalStaticField(Build.VERSION.class, "SDK_INT", 9);
+        Robolectric.Reflection.setFinalStaticField(Build.VERSION.class, "SDK_INT", 10);
         Memento.retain(activityMock);
     }
 

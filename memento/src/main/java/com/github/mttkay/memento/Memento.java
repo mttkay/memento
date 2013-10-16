@@ -17,7 +17,7 @@ public class Memento {
 
         if (activity instanceof FragmentActivity) {
             retainSupportV4((FragmentActivity) activity, fragmentTag);
-        } else if (Build.VERSION.SDK_INT >= 10) {
+        } else if (Build.VERSION.SDK_INT >= 11) {
             retainNative(activity, fragmentTag);
         } else {
             throw new RuntimeException("For API levels < 10, Memento requires the support-v4 package");
