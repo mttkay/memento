@@ -55,16 +55,18 @@ changes. **Annotated fields cannot be private.**
 Memento adds a new life-cycle hook to your activies: `onLaunch`. This event signals that your activity
 was created for the first time, contrary to e.g. being recreated due to a configuration change.
 In `onLaunch`, initialize any member fields that are supposed to be created just once, when the activity
-first starts. **The activity must inherit from FragmentActivity; support for Honeycomb+ activities
-with built in fragment support will be added shortly.**
+first starts.
 
-    public class MyActivity extends FragmentActivity implements MementoCallbacks {
+    public class MyActivity extends Activity implements MementoCallbacks {
     
         @Override
         public void onLaunch() {
            mTask = new AsyncTask() { ... };
         }
     }
+    
+**NOTE:** If you're targeting an API level before Honeycomb (11), you must use the support-v4 package 
+and inherit from `FragmentActivity` instead.
     
 ### 3. Bind Activity
 Execute Memento to either initialize or restore annotated fields in `onCreate`:
