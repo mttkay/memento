@@ -31,14 +31,13 @@ dependencies {
   apt 'com.github.mttkay.memento:memento-processor:0.1'
 }
 
-afterEvaluate { project ->
-    android.applicationVariants.each { variant ->
-        variant.javaCompile.options.compilerArgs += [
-                '-classpath', configurations.compile.asPath,
-                '-processorpath', configurations.apt.asPath,
-                '-processor', 'com.github.mttkay.memento.MementoProcessor'
-        ]
-    }
+android {
+  applicationVariants.all {
+    javaCompile.options.compilerArgs.addAll(
+      '-processorpath', configurations.apt.asPath,
+      '-processor', 'com.github.mttkay.memento.MementoProcessor'
+    )
+  }
 }
 ```
 
