@@ -11,20 +11,34 @@ public class Memento {
 
     private static final String LOG_TAG = Memento.class.getSimpleName();
 
+    private static final boolean USES_SUPPORT_FRAGMENTS;
+
+    static {
+        boolean supportFragmentsAvailable = false;
+        try {
+            Class.forName("android.support.v4.app.FragmentActivity");
+            supportFragmentsAvailable = true;
+        } catch (ClassNotFoundException e) {
+        }
+        USES_SUPPORT_FRAGMENTS = supportFragmentsAvailable;
+    }
+
     public static void retain(Activity activity) {
         final String fragmentTag = getMementoFragmentTag(activity);
         log("Obtaining " + fragmentTag);
 
-        if (activity instanceof FragmentActivity) {
+        if (USES_SUPPORT_FRAGMENTS && activity instanceof FragmentActivity) {
             retainSupportV4((FragmentActivity) activity, fragmentTag);
-        } else if (Build.VERSION.SDK_INT >= 11) {
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             retainNative(activity, fragmentTag);
         } else {
-            throw new RuntimeException("For API levels < 10, Memento requires the support-v4 package");
+            throw new RuntimeException("For API levels < 11, Memento requires the support-v4 package and " +
+                    "the target Activity must inherit from FragmentActivity");
         }
     }
 
     private static void retainNative(Activity activity, String fragmentTag) {
+        log("Entering native fragments mode");
         android.app.FragmentManager fragmentManager = activity.getFragmentManager();
         MementoMethods memento = (MementoMethods) fragmentManager.findFragmentByTag(fragmentTag);
 
@@ -37,6 +51,7 @@ public class Memento {
     }
 
     private static void retainSupportV4(FragmentActivity activity, String fragmentTag) {
+        log("Entering support fragments mode");
         FragmentManager fragmentManager = activity.getSupportFragmentManager();
         MementoMethods memento = (MementoMethods) fragmentManager.findFragmentByTag(fragmentTag);
 
