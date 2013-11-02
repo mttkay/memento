@@ -5,6 +5,9 @@ of an activity across configuration changes in a simple and type-safe manner.
 
 ![Memento](https://raw.github.com/mttkay/memento/master/project/logo_400w.png)
 
+## The latest version is 0.2
+[See the full change log](https://github.com/mttkay/memento/wiki/Change-log)
+
 # Overview
 On Android, `Activity` instances will get destroyed by the runtime whenever configuration changes occur such as a change in screen orientation. Since this will cause the activity to go through an `onDestroy`/`onCreate` cycle, all instance state is lost.
 
