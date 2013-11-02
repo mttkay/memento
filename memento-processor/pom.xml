@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.github.mttkay.memento</groupId>
         <artifactId>memento-project</artifactId>
-        <version>0.2</version>
+        <version>0.3-SNAPSHOT</version>
     </parent>
     <artifactId>memento-processor</artifactId>
     <packaging>jar</packaging>
@@ -14,7 +14,7 @@
         <dependency>
             <groupId>com.github.mttkay.memento</groupId>
             <artifactId>memento</artifactId>
-            <version>0.2</version>
+            <version>0.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.google.android</groupId>
