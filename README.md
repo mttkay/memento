@@ -28,10 +28,10 @@ configurations {
 
 dependencies {
   // pulls in dependency for the client library
-  compile 'com.github.mttkay.memento:memento:0.1'
+  compile 'com.github.mttkay.memento:memento:0.2'
   
   // pulls in dependency for APT
-  apt 'com.github.mttkay.memento:memento-processor:0.1'
+  apt 'com.github.mttkay.memento:memento-processor:0.2'
 }
 
 android {
